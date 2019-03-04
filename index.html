@@ -25,226 +25,416 @@
     SOFTWARE.
 -->
 <html>
-    <head>
-        <title>HTML5 Canvas Winning Wheel</title>
-        <!-- Style -->
-        <link rel="stylesheet" href="./css/bootstrap.min.css" type="text/css" />
-        <link rel="stylesheet" href="./css/main.css" type="text/css" />
-        <!-- Style -->
-        
-        <!-- Javascript and jquery -->
-        <script type="text/javascript" src="./js/TweenMax.min.js"></script>
-        <script type="text/javascript" src="./js/Winwheel.js"></script>    
-        <script type="text/javascript" src="./js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="./js/jquery.min.js"></script>
-        <!-- Javascript and jquery -->
-    </head>
-    <body>
-        <div align="center">
-            <h1>Winwheel.js example wheel - wheel of fortune</h1>
-            <p>Here is an example of a code-drawn Wheel of Fortune looking wheel which spins to a stop with the prize won alerted to the user.</p>
-            <br />
-            <p>
-                With some additional coding it could be made so that the prize won is added to a total after each spin rather than
-                just alerting the prize to make a proper wheel of fortune like game.
-            </p>
-            <br />
-            <p>Choose a power setting then press the Spin button. You will be alerted to the prize won when the spinning stops.</p>
-            <br />
-            <table cellpadding="0" cellspacing="0" border="0">
-            <tr>
-                <td>
-                    <div class="power_controls">
-                        <br />
-                        <br />
-                        <table class="power" cellpadding="10" cellspacing="0">
-                            <tr>
-                                <th align="center">Power</th>
-                            </tr>
-                            <tr>
-                                <td width="78" align="center" id="pw3" onClick="powerSelected(3);">High</td>
-                            </tr>
-                            <tr>
-                                <td align="center" id="pw2" onClick="powerSelected(2);">Med</td>
-                            </tr>
-                            <tr>
-                                <td align="center" id="pw1" onClick="powerSelected(1);">Low</td>
-                            </tr>
-                        </table>
-                        <br />
-                        <img id="spin_button" src="spin_off.png" alt="Spin" onClick="startSpin();" />
-                        <br /><br />
-                        &nbsp;&nbsp;<a href="#" onClick="resetWheel(); return false;">Play Again</a><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(reset)
-                    </div>
-                </td>
-                <td width="438" height="582" class="the_wheel" align="center" valign="center">
-                    <canvas id="canvas" width="434" height="434">
-                        <!-- <p style="{color: white}" align="center">Sorry, your browser doesn't support canvas. Please try another.</p> -->
-                    </canvas>
-                </td>
-            </tr>
-        </table>
 
-        
-        <script>
-            // Create new wheel object specifying the parameters at creation time.
-            var theWheel = new Winwheel({
-                'outerRadius'     : 212,        // Set outer radius so wheel fits inside the background.
-                'innerRadius'     : 75,         // Make wheel hollow so segments don't go all way to center.
-                'textFontSize'    : 24,         // Set default font size for the segments.
-                'textOrientation' : 'vertical', // Make text vertial so goes down from the outside of wheel.
-                'textAlignment'   : 'outer',    // Align text to outside of wheel.
-                'numSegments'     : 24,         // Specify number of segments.
-                'segments'        :             // Define segments including colour and text.
+<head>
+    <title>HTML5 Canvas Winning Wheel</title>
+    <!-- Style -->
+    <link rel="stylesheet" href="./css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="./css/main.css" type="text/css" />
+    <!-- Style -->
+
+    <!-- Javascript and jquery -->
+    <script type="text/javascript" src="./js/TweenMax.min.js"></script>
+    <script type="text/javascript" src="./js/Winwheel.js"></script>
+    <script type="text/javascript" src="./js/jquery-3.2.1.slim.min.js"></script>
+    <script type="text/javascript" src="./js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="./js/"></script>
+    <!-- Javascript and jquery -->
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 mt-5">
+                <h2 class="text-center">Control panel</h3>
+                    <form>
+                        <div class="form-group row">
+                            <label for="addSegments" class="col-sm-2 col-form-label">Segements</label>
+                            <div class="col-sm-10">
+                                <button class="btn btn-dark" type="button" onclick="addSegment()">Add Segements</button>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                                <form>
+                                        <div class="form-group">                                      
+                                          <label for="sel2">All segments</label>
+                                          <select multiple class="form-control" id="allSegments">                                              
+                                          </select>
+                                        </div>
+                                      </form>
+                            <div class="collapse mt-3" id="segementColor">
+                                <form>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-4">
+                                            <label for="segmentName">Segment name</label>
+                                            <input type="text" class="form-control" id="segmentName"
+                                                placeholder="Segment name" disabled required>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="fillStyle">Color</label>
+                                            <input type="color" name="favcolor" value="#ff0000" class="form-control"
+                                                id="fillStyle" required>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="inputZip">Selected color</label>
+                                            <input type="text" class="form-control" id="selectedColor" disabled
+                                                required>
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-success">Okay</button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="outerRadius" class="col-sm-2 col-form-label">Outer radius</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="outerRadius" placeholder="Outer radius"
+                                    required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="lineWidth" class="col-sm-2 col-form-label">lineWidth</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="lineWidth" placeholder="line width"
+                                    required>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="textAlignment" class="col-sm-2 col-form-label">Text alignment</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="textAlignment" placeholder="Text alignment"
+                                    required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="textMargin" class="col-sm-2 col-form-label">Text margin</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="textMargin" placeholder="Text margin"
+                                    required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="textFontWeight" class="col-sm-2 col-form-label">Font weight</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="textFontWeight" placeholder="Font weight"
+                                    required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <h3>Animation</h3>
+                        </div>
+                        <div class="form-group row">
+                            <label for="animationType" class="col-sm-2 col-form-label">Animation Type</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="animationType" placeholder="Animation Type">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="animationDuration" class="col-sm-2 col-form-label">Animation duration</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="animationDuration"
+                                    placeholder="Animation duration">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="spinNumbers" class="col-sm-2 col-form-label">Spin numbers</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="spinNumbers" placeholder="Spin numbers">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="rotationAngle" class="col-sm-2 col-form-label">Rotation angle</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="rotationAngle" placeholder="Rotation angle">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="spinNumbers" class="col-sm-2 col-form-label">Spin numbers</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="spinNumbers" placeholder="Spin numbers">
+                            </div>
+                        </div>
+                        <!-- <fieldset class="form-group">
+                        <div class="row">
+                            <legend class="col-form-label col-sm-2 pt-0">Radios</legend>
+                            <div class="col-sm-10">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1"
+                                        value="option1" checked>
+                                    <label class="form-check-label" for="gridRadios1">
+                                        First radio
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2"
+                                        value="option2">
+                                    <label class="form-check-label" for="gridRadios2">
+                                        Second radio
+                                    </label>
+                                </div>
+                                <div class="form-check disabled">
+                                    <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios3"
+                                        value="option3" disabled>
+                                    <label class="form-check-label" for="gridRadios3">
+                                        Third disabled radio
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset> -->
+                        <div class="form-group row">
+                            <div class="col-sm-2">Checkbox</div>
+                            <div class="col-sm-10">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="gridCheck1">
+                                    <label class="form-check-label" for="gridCheck1">
+                                        Example checkbox
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-10">
+                                <button type="submit" class="btn btn-primary">Sign in</button>
+                            </div>
+                        </div>
+                    </form>
+            </div>
+            <div class="col-md-6">
+                <div align="right">
+                    <!-- <h1>Winwheel.js example wheel - wheel of fortune</h1> -->
+                    <table cellpadding="0" cellspacing="0" border="0">
+                        <tr>
+                            <!-- <td>
+                                        <div class="power_controls">
+                                            <br />
+                                            <br />
+                                            <table class="power" cellpadding="10" cellspacing="0">
+                                                <tr>
+                                                    <th align="center">Power</th>
+                                                </tr>
+                                                <tr>
+                                                    <td width="78" align="center" id="pw3" onClick="powerSelected(3);">High</td>
+                                                </tr>
+                                                <tr>
+                                                    <td align="center" id="pw2" onClick="powerSelected(2);">Med</td>
+                                                </tr>
+                                                <tr>
+                                                    <td align="center" id="pw1" onClick="powerSelected(1);">Low</td>
+                                                </tr>
+                                            </table>
+                                            <br />
+                                            <img id="spin_button" src="spin_off.png" alt="Spin" onClick="startSpin();" />
+                                            <br /><br />
+                                            &nbsp;&nbsp;<a href="#" onClick="resetWheel(); return false;">Play Again</a><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(reset)
+                                        </div>
+                                    </td> -->
+                            <td width="438" height="582" class="the_wheel" align="center" valign="center">
+                                <canvas id="canvas" width="434" height="434">
+                                    <!-- <p style="{color: white}" align="center">Sorry, your browser doesn't support canvas. Please try another.</p> -->
+                                </canvas>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Create new wheel object specifying the parameters at creation time.
+        var theWheel = new Winwheel({
+            'outerRadius': 212,        // Set outer radius so wheel fits inside the background.
+            'innerRadius': 75,         // Make wheel hollow so segments don't go all way to center.
+            'textFontSize': 24,         // Set default font size for the segments.
+            'textMargin': 50,
+            'textOrientation': 'vertical', // Make text vertial so goes down from the outside of wheel.
+            'textAlignment': 'outer',    // Align text to outside of wheel.
+            'numSegments': 4,         // Specify number of segments.
+            'segments':             // Define segments including colour and text.
                 [                               // font size and test colour overridden on backrupt segments.
-                   {'fillStyle' : '#ee1c24', 'text' : '300'},
-                   {'fillStyle' : '#3cb878', 'text' : '450'},
-                   {'fillStyle' : '#f6989d', 'text' : '600'},
-                   {'fillStyle' : '#00aef0', 'text' : '750'},
-                   {'fillStyle' : '#f26522', 'text' : '500'},
-                   {'fillStyle' : '#000000', 'text' : 'BANKRUPT', 'textFontSize' : 16, 'textFillStyle' : '#ffffff'},
-                   {'fillStyle' : '#e70697', 'text' : '3000'},
-                   {'fillStyle' : '#fff200', 'text' : '600'},
-                   {'fillStyle' : '#f6989d', 'text' : '700'},
-                   {'fillStyle' : '#ee1c24', 'text' : '350'},
-                   {'fillStyle' : '#3cb878', 'text' : '500'},
-                   {'fillStyle' : '#f26522', 'text' : '800'},
-                   {'fillStyle' : '#a186be', 'text' : '300'},
-                   {'fillStyle' : '#fff200', 'text' : '400'},
-                   {'fillStyle' : '#00aef0', 'text' : '650'},
-                   {'fillStyle' : '#ee1c24', 'text' : '1000'},
-                   {'fillStyle' : '#f6989d', 'text' : '500'},
-                   {'fillStyle' : '#f26522', 'text' : '400'},
-                   {'fillStyle' : '#3cb878', 'text' : '900'},
-                   {'fillStyle' : '#000000', 'text' : 'BANKRUPT', 'textFontSize' : 16, 'textFillStyle' : '#ffffff'},
-                   {'fillStyle' : '#a186be', 'text' : '600'},
-                   {'fillStyle' : '#fff200', 'text' : '700'},
-                   {'fillStyle' : '#00aef0', 'text' : '800'},
-                   {'fillStyle' : '#ffffff', 'text' : 'LOOSE TURN', 'textFontSize' : 12}
+                    { 'fillStyle': '#ee1c24', 'text': '1' },
+                    { 'fillStyle': '#3cb878', 'text': '2' },
+                    { 'fillStyle': '#f6989d', 'text': '3' },
+                    { 'fillStyle': '#00aef0', 'text': '4' }
                 ],
-                'animation' :           // Specify the animation to use.
-                {
-                    'type'     : 'spinToStop',
-                    'duration' : 8,     // Duration in seconds.
-                    'spins'    : 3,     // Default number of complete spins.
-                    'callbackFinished' : alertPrize
-                }
-            });
-
-            // Vars used by the code in this page to do power controls.
-            var wheelPower    = 0;
-            var wheelSpinning = false;
-
-            // -------------------------------------------------------
-            // Function to handle the onClick on the power buttons.
-            // -------------------------------------------------------
-            function powerSelected(powerLevel)
+            'animation':           // Specify the animation to use.
             {
-                // Ensure that power can't be changed while wheel is spinning.
-                if (wheelSpinning == false)
-                {
-                    // Reset all to grey incase this is not the first time the user has selected the power.
-                    document.getElementById('pw1').className = "";
-                    document.getElementById('pw2').className = "";
-                    document.getElementById('pw3').className = "";
-
-                    // Now light up all cells below-and-including the one selected by changing the class.
-                    if (powerLevel >= 1)
-                    {
-                        document.getElementById('pw1').className = "pw1";
-                    }
-
-                    if (powerLevel >= 2)
-                    {
-                        document.getElementById('pw2').className = "pw2";
-                    }
-
-                    if (powerLevel >= 3)
-                    {
-                        document.getElementById('pw3').className = "pw3";
-                    }
-
-                    // Set wheelPower var used when spin button is clicked.
-                    wheelPower = powerLevel;
-
-                    // Light up the spin button by changing it's source image and adding a clickable class to it.
-                    document.getElementById('spin_button').src = "spin_on.png";
-                    document.getElementById('spin_button').className = "clickable";
-                }
+                'type': 'spinToStop',
+                'duration': 8,     // Duration in seconds.
+                'spins': 3,     // Default number of complete spins.
+                'callbackFinished': alertPrize
             }
+        });
 
-            // -------------------------------------------------------
-            // Click handler for spin button.
-            // -------------------------------------------------------
-            function startSpin()
-            {
-                // Ensure that spinning can't be clicked again while already running.
-                if (wheelSpinning == false)
-                {
-                    // Based on the power level selected adjust the number of spins for the wheel, the more times is has
-                    // to rotate with the duration of the animation the quicker the wheel spins.
-                    if (wheelPower == 1)
-                    {
-                        theWheel.animation.spins = 3;
-                    }
-                    else if (wheelPower == 2)
-                    {
-                        theWheel.animation.spins = 6;
-                    }
-                    else if (wheelPower == 3)
-                    {
-                        theWheel.animation.spins = 9;
-                    }
+        // Vars used by the code in this page to do power controls.
+        var wheelPower = 0;
+        var wheelSpinning = false;
 
-                    // Disable the spin button so can't click again while wheel is spinning.
-                    document.getElementById('spin_button').src       = "spin_off.png";
-                    document.getElementById('spin_button').className = "";
-
-                    // Begin the spin animation by calling startAnimation on the wheel object.
-                    theWheel.startAnimation();
-
-                    // Set to true so that power can't be changed and spin button re-enabled during
-                    // the current animation. The user will have to reset before spinning again.
-                    wheelSpinning = true;
-                }
-            }
-
-            // -------------------------------------------------------
-            // Function for reset button.
-            // -------------------------------------------------------
-            function resetWheel()
-            {
-                theWheel.stopAnimation(false);  // Stop the animation, false as param so does not call callback function.
-                theWheel.rotationAngle = 0;     // Re-set the wheel angle to 0 degrees.
-                theWheel.draw();                // Call draw to render changes to the wheel.
-
-                document.getElementById('pw1').className = "";  // Remove all colours from the power level indicators.
+        // -------------------------------------------------------
+        // Function to handle the onClick on the power buttons.
+        // -------------------------------------------------------
+        function powerSelected(powerLevel) {
+            // Ensure that power can't be changed while wheel is spinning.
+            if (wheelSpinning == false) {
+                // Reset all to grey incase this is not the first time the user has selected the power.
+                document.getElementById('pw1').className = "";
                 document.getElementById('pw2').className = "";
                 document.getElementById('pw3').className = "";
 
-                wheelSpinning = false;          // Reset to false to power buttons and spin can be clicked again.
+                // Now light up all cells below-and-including the one selected by changing the class.
+                if (powerLevel >= 1) {
+                    document.getElementById('pw1').className = "pw1";
+                }
+
+                if (powerLevel >= 2) {
+                    document.getElementById('pw2').className = "pw2";
+                }
+
+                if (powerLevel >= 3) {
+                    document.getElementById('pw3').className = "pw3";
+                }
+
+                // Set wheelPower var used when spin button is clicked.
+                wheelPower = powerLevel;
+
+                // Light up the spin button by changing it's source image and adding a clickable class to it.
+                document.getElementById('spin_button').src = "spin_on.png";
+                document.getElementById('spin_button').className = "clickable";
+            }
+        }
+
+        // -------------------------------------------------------
+        // Click handler for spin button.
+        // -------------------------------------------------------
+        function startSpin() {
+            // Ensure that spinning can't be clicked again while already running.
+            if (wheelSpinning == false) {
+                // Based on the power level selected adjust the number of spins for the wheel, the more times is has
+                // to rotate with the duration of the animation the quicker the wheel spins.
+                if (wheelPower == 1) {
+                    theWheel.animation.spins = 3;
+                }
+                else if (wheelPower == 2) {
+                    theWheel.animation.spins = 6;
+                }
+                else if (wheelPower == 3) {
+                    theWheel.animation.spins = 9;
+                }
+
+                // Disable the spin button so can't click again while wheel is spinning.
+                // document.getElementById('spin_button').src = "spin_off.png";
+                // document.getElementById('spin_button').className = "";
+
+                // Begin the spin animation by calling startAnimation on the wheel object.
+                theWheel.startAnimation();
+
+                // Set to true so that power can't be changed and spin button re-enabled during
+                // the current animation. The user will have to reset before spinning again.
+                wheelSpinning = true;
+            }
+        }
+
+        // -------------------------------------------------------
+        // Function for reset button.
+        // -------------------------------------------------------
+        function resetWheel() {
+            theWheel.stopAnimation(false);  // Stop the animation, false as param so does not call callback function.
+            theWheel.rotationAngle = 0;     // Re-set the wheel angle to 0 degrees.
+            theWheel.draw();                // Call draw to render changes to the wheel.
+
+            document.getElementById('pw1').className = "";  // Remove all colours from the power level indicators.
+            document.getElementById('pw2').className = "";
+            document.getElementById('pw3').className = "";
+
+            wheelSpinning = false;          // Reset to false to power buttons and spin can be clicked again.
+        }
+
+        // -------------------------------------------------------
+        // Called when the spin animation has finished by the callback feature of the wheel because I specified callback in the parameters.
+        // -------------------------------------------------------
+        function alertPrize(indicatedSegment) {
+            // Just alert to the user what happened.
+            // In a real project probably want to do something more interesting than this with the result.
+            if (indicatedSegment.text == 'LOOSE TURN') {
+                alert('Sorry but you loose a turn.');
+            }
+            else if (indicatedSegment.text == 'BANKRUPT') {
+                alert('Oh no, you have gone BANKRUPT!');
+            }
+            else {
+                alert("You have won " + indicatedSegment.text);
+            }
+        }
+
+        // -------------------------------------------------------
+        // Custom wheel options (GUI)
+        // -------------------------------------------------------
+        // Attributes        
+         var arr = [];
+         //Adding option data
+         var select = document.getElementById("allSegments");
+        // Attributes
+
+        //Functions
+
+        //Get the wheel text
+        function getMaxNumber() {
+            debugger
+            var maxSegmentVal;          
+            theWheel.segments.forEach(function (key, val) {
+                // document.querySelector('#allSegments').option=val
+                arr.push(parseInt(val));
+                maxSegmentVal = parseInt(Math.max(...arr));
+            });
+            arr.push(parseInt(maxSegmentVal+1));
+            return maxSegmentVal;
+        }
+
+        // Add new segment 
+        function addSegment() {
+               
+                debugger;
+                // The Second parameter in the call to addSegment specifies the position,
+                // in this case 1 meaning the new segment goes at the start of the wheel.
+                theWheel.addSegment({
+                    'text': getMaxNumber() + 1 + '',
+                    'fillStyle': 'aqua'
+                }, 2);
+
+                //To remove th nhe null element of 0
+                arr.splice(0, 1);
+                for (index in arr) {
+                    select.options[select.options.length] = new Option(arr[index], index);
+                }
+                // The draw method of the wheel object must be called in order for the changes
+                // to be rendered.
+                theWheel.draw();
+            }
+            //Remove the options 
+            function revoveOptions(){
+                debugger
+               for(let i=0 ; i<select.options.length;i++)
+               {
+                document.getElementById("allSegments").options[i].value=''
+               }
             }
 
-            // -------------------------------------------------------
-            // Called when the spin animation has finished by the callback feature of the wheel because I specified callback in the parameters.
-            // -------------------------------------------------------
-            function alertPrize(indicatedSegment)
-            {
-                // Just alert to the user what happened.
-                // In a real project probably want to do something more interesting than this with the result.
-                if (indicatedSegment.text == 'LOOSE TURN')
-                {
-                    alert('Sorry but you loose a turn.');
-                }
-                else if (indicatedSegment.text == 'BANKRUPT')
-                {
-                    alert('Oh no, you have gone BANKRUPT!');
-                }
-                else
-                {
-                    alert("You have won " + indicatedSegment.text);
-                }
-            }
-        </script>
-    </body>
+        // Delete segment
+
+        function deleteSegment() {
+            // Call function to remove a segment from the wheel, by default the last one will be
+            // removed; you can pass in the number of the segment to delete if desired.
+            theWheel.deleteSegment();
+
+            // The draw method of the wheel object must be called to render the changes.
+            theWheel.draw();
+        }
+
+    //Functions
+    </script>
+</body>
+
 </html>

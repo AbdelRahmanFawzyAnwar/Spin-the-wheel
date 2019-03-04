@@ -79,3 +79,17 @@ td.pw3
 {
     margin-bottom: 5px;
 }
+.modal-dialog {
+          width: 500px;
+          height:600px !important;
+        }
+.modal-content {
+    /* 80% of window height */
+    height: 60%;
+    
+}        
+.modal-header {
+
+    padding:16px 16px;
+    
+ }
